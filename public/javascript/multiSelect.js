@@ -16,7 +16,8 @@ class MultiSelect {
             container: document.getElementById('multiSelectContainer'),
             input: document.getElementById('multiSelectInput'),
             dropdown: document.getElementById('dropdownMenu'),
-            form: document.getElementById('CampForm')
+            form: document.getElementById('CampForm'),
+            items: document.querySelectorAll('.dropdown-item')
         };
 
         if (this.elements.input.value !== '') {
@@ -84,17 +85,32 @@ class MultiSelect {
 
     renderDropdown() {
         const visible = this.getVisible();
-        this.elements.dropdown.innerHTML = visible.length ?
-            visible.map((opt, i) => `
-                    <div class="dropdown-item ${i === this.highlighted ? 'highlighted' : ''}"
-                         onmouseover="this.closest('.dropdown-menu').multiSelect.highlighted = ${i}"
-                         onclick="this.closest('.dropdown-menu').multiSelect.select('${opt}')">
-                        ${opt}
-                    </div>
-                `).join('') :
-            '<div class="dropdown-item">No matches found</div>';
+        this.elements.dropdown.innerHTML = visible.length
+            ? visible.map((opt, i) => `
+                <div class="dropdown-item ${i === this.highlighted ? 'highlighted' : ''}" data-index="${i}" data-option="${opt}">
+                    ${opt}
+                </div>
+            `).join('')
+            : '<div class="dropdown-item">No matches found</div>';
 
-        this.elements.dropdown.multiSelect = this;
+        // Add event listeners to the rendered items
+        this.elements.dropdown.querySelectorAll('.dropdown-item').forEach((item) => {
+            item.addEventListener('mouseover', () => {
+                console.log()
+                if (this.highlighted !== parseInt(item.getAttribute('data-index'), 10)) {
+                    this.highlighted = parseInt(item.getAttribute('data-index'), 10);
+                    this.renderDropdown()
+                }
+            });
+
+            item.addEventListener('click', (event) => {
+                const option = item.getAttribute('data-option');
+                if (option) this.select(option);
+                event.stopPropagation(); // Prevent event bubbling
+            });
+
+        });
+
     }
 
     select(option) {
@@ -105,13 +121,15 @@ class MultiSelect {
             tag.setAttribute('data-value', option);  // Add data attribute for easier removal
             tag.innerHTML = `
                     ${option}
-                    <button class="remove-tag" onclick="this.closest('.tag').multiSelect.remove('${option}')">&times;</button>
+                    <button type="button" class="remove-tag">&times;</button>
                 `;
             tag.multiSelect = this;
             this.elements.container.insertBefore(tag, this.elements.container.lastElementChild);
+
+            tag.addEventListener('click', () => this.remove(option))
         }
         this.elements.input.value = '';
-        this.hideDropdown();
+        this.renderDropdown();
         this.elements.input.focus();
     }
 

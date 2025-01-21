@@ -1,0 +1,39 @@
+<% layout('/layouts/boilerplate') %>
+    <link rel="stylesheet" href="/css/userforms.css">
+
+
+    <div class="container d-flex justify-content-center align-items-center mt-5">
+        <div class="row w-100">
+            <div class="col-md-8 offset-md-2 col-xl-4 offset-xl-4">
+                <div class="card shadow p-3">
+                    <div class="formTitle d-flex flex-row">
+                        <a class="svgBack" href="<%= (returnTo) ? returnTo : " /campsites"%>"></a>
+                        <h1 class="card-title text-center w-100">
+                            צור משתמש חדש
+                        </h1>
+                    </div>
+                    <form class="needs-validation d-flex flex-column" novalidate method="post" action="/register">
+                        <div class="form-floating mb-3">
+                            <input required class="form-control" type="email" id="email" name="email"
+                                placeholder="מייל">
+                            <label class="form-label" for="email">מייל</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input required class="form-control" type="text" id="username" name="username"
+                                placeholder="שם משתמש">
+                            <label class="form-label" for="username">שם משתמש</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input required class="form-control" type="password" id="password" name="password"
+                                placeholder="סיסמא">
+                            <label class="form-label" for="password">סיסמא</label>
+                            <i class="svgCloseEye" id="togglePassword"></i>
+                        </div>
+                        <button class="btn btn-success">הירשם</button>
+                    </form>
+                    <a class="btn btn-secondary w-100 mt-3" href="/login" %>">יש לי כבר חשבון</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/javascript/togglePassword.js"></script>

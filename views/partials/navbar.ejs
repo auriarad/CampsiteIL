@@ -1,0 +1,32 @@
+<nav id="siteNavbar" class="navbar">
+    <div class="container-fluid d-flex flex-row">
+        <a class="navbar-brand text-white" href="/campsites">
+            <img src="/assets/logo.png" alt="Logo" width="28" height="28" class="d-inline-block align-text-top">
+            קמפינגIL
+        </a>
+        <div class="dropdown">
+            <a class="" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <img src="/assets/userDropdownLogo.png" width="75px" alt="">
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <% if(loggedUser){ %>
+                    <li>
+                        <p class="dropdown-item mb-0">
+                            הי <%= loggedUser.username %>
+                        </p>
+                    </li>
+                    <li>
+                        <form action="/campsites/new"><button class="btn">הוסף חניון חדש</button></form>
+                    </li>
+
+                    <li>
+                        <form method="post" action="/logout"><button class="btn">התנתק</button></form>
+                    </li>
+                    <% }else{ %>
+                        <li><a class="dropdown-item" href="/login">התחבר</a></li>
+                        <li><a class="dropdown-item" href="/register">הרשם</a></li>
+                        <% } %>
+            </ul>
+        </div>
+    </div>
+</nav>

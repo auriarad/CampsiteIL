@@ -1,0 +1,256 @@
+<% layout('/layouts/boilerplate') %>
+    <link rel="stylesheet" href="/css/show.css">
+    <link rel="stylesheet" href="/css/photoUpload.css">
+
+    <div class="container">
+        <!-- תמונות -->
+        <div class="row">
+            <div class="container my-4  ">
+                <!-- Mini Gallery -->
+                <div class="row mini-gallery d-flex flex-row justify-content-center">
+                    <% for (let i=0; i < Math.min(campsite.imgs.length, 4); i++) { %>
+                        <% if(i===0){ %>
+                            <div class="col-6 col-md-3 p-1">
+                                <img id="<%= campsite.imgs.length===1 ? 'onlyOne' :'' %>" class="mini-gallery-img"
+                                    src="<%= campsite.imgs[i].url %>" alt="Image <%= i + 1 %>" data-bs-toggle="modal"
+                                    data-bs-target="#imageModal">
+                            </div>
+                            <% } else if(i===1 && campsite.imgs.length> 2){ %>
+                                <div class="col-3 col-md-6 d-flex flex-row flex-wrap">
+
+                                    <div class="twoThreePhoto p-1" data-bs-toggle="modal" data-bs-target="#imageModal">
+                                        <img class="mini-gallery-img" src="<%= campsite.imgs[i].url %>"
+                                            alt="Image <%= i + 1 %>">
+                                    </div>
+
+                                    <div class="twoThreePhoto p-1">
+                                        <div class="small-show-more" data-bs-toggle="modal"
+                                            data-bs-target="#imageModal">
+                                            <img class="mini-gallery-img" src="<%=campsite.imgs[i+1].url %>"
+                                                alt="Image <%= i + 1 %>">
+                                            <div class="overlay d-md-none">עוד תמונות</div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                                <% }else if(i===1 && campsite.imgs.length===2) { %>
+                                    <div class="col-6 col-md-3 p-1">
+                                        <div>
+                                            <img class="mini-gallery-img" src="<%= campsite.imgs[i].url %>"
+                                                alt="Image <%= i + 1 %>" data-bs-toggle="modal"
+                                                data-bs-target="#imageModal">
+                                        </div>
+                                    </div>
+                                    <% }else if(i===3){%>
+                                        <div class=" col-3 d-none d-md-block p-1">
+                                            <div class="show-more" data-bs-toggle="modal" data-bs-target="#imageModal">
+                                                <img class="mini-gallery-img" src="<%= campsite.imgs[i].url %>"
+                                                    alt="Image <%= i + 1 %>">
+                                                <div class="overlay">עוד תמונות</div>
+                                            </div>
+                                        </div>
+                                        <% } %>
+                                            <% } %>
+                </div>
+                <!-- ספרייה -->
+                <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="imageModalLabel">
+                                    <%= campsite.title %>
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+
+                            <div id="photos" class="modal-body">
+                                <% for (img of campsite.imgs) { %>
+                                    <img src="<%= img.url %>" alt="Image">
+                                    <% } %>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">סגור</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+
+                    <div class="col-md-6 d-flex flex-column align-items-center">
+                        <!-- העלאת תמונות -->
+                        <% if(loggedUser && campsite.author.equals(loggedUser._id)){ %>
+                            <form id="uploadForm" method="post" action="/campsites/<%= campsite._id %>/photoUpload">
+                                <button type="button" class="button-55" data-bs-toggle="modal"
+                                    data-bs-target="#uploadModal">
+                                    הוסף תמונות חדשות!
+                                </button>
+                                <div class="modal fade" id="uploadModal" tabindex="-1">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">
+                                                    <%= campsite.title %>
+                                                </h5>
+                                                <button type="button" class="btn-close"
+                                                    data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <input type="file" class="form-control mb-3" id="photoInput" multiple
+                                                    accept=".png, .jpg, .jpeg">
+                                                <button type="button" id="photoButton"
+                                                    class="btn btn-outline-secondary form-control">העלה
+                                                    תמונות</button>
+                                                <div id="preview" class="row row-cols-4 g-2 m-3"></div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button"
+                                                    class="btn btn-outline-secondary rounded-pill w-25"
+                                                    data-bs-dismiss="modal">בטל</button>
+                                                <button class="btn btn-success rounded-pill w-25"
+                                                    id="uploadButton">העלה</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <% } %>
+
+                                <div class="card infoCard mt-4 w-100">
+                                    <div class="card-body">
+                                        <div
+                                            class="card-title d-flex flex-row justify-content-between align-items-center">
+                                            <h3>
+                                                <%= campsite.title %>
+                                            </h3>
+
+                                            <p class="card-text ">
+                                                <i class="svgLocation"></i>
+                                                <%= campsite.region %>
+                                            </p>
+
+                                        </div>
+                                        <p class="card-text">
+                                            <%= campsite.description %>
+                                        </p>
+                                        <div class="features">
+                                            <% for(let feature of campsite.features){ %>
+                                                <span
+                                                    class="badge rounded-pill feature<%= campsite.featuresList.indexOf(feature) %> ">
+                                                    <%= feature %>
+                                                </span>
+                                                <% } %>
+                                        </div>
+                                        <% if(loggedUser && campsite.author.equals(loggedUser._id)){ %>
+                                            <div class="border border-3 rounded-pill text-center p-2">
+
+                                                <p class="text-secondary m-0">אתה יצרת את החניון הזה!</p>
+                                                <div class="buttons d-flex flex-row justify-content-center">
+                                                    <a href="/campsites/<%= campsite._id %>/edit"
+                                                        class="btn btn-info w-50 rounded-0 rounded-start">ערוך</a>
+
+                                                    <form class="d-inline-block w-25" method="post"
+                                                        action="/campsites/<%= campsite._id %>?_method=DELETE">
+                                                        <button
+                                                            class="btn btn-danger w-100 rounded-0 rounded-end">מחק</button>
+                                                    </form>
+
+                                                </div>
+                                            </div>
+
+                                            <% } %>
+                                    </div>
+                                    <div class="card-img-bottom" id='map'></div>
+
+                                </div>
+
+
+                    </div>
+
+                    <div class="col-md-6 mt-1">
+                        <div class="review-form">
+                            <form novalidate class="needs-validation reviewForm" method="post"
+                                action="/campsites/<%= campsite._id %>/reviews">
+                                <h4 class="m-0">השאר ביקורת</h4>
+                                <div class="rating mb-1">
+                                    <input required type="radio" name="review[rating]" value="5" id="rating-5">
+                                    <label for="rating-5"></label>
+                                    <input type="radio" name="review[rating]" value="4" id="rating-4">
+                                    <label for="rating-4"></label>
+                                    <input type="radio" name="review[rating]" value="3" id="rating-3">
+                                    <label for="rating-3"></label>
+                                    <input type="radio" name="review[rating]" value="2" id="rating-2">
+                                    <label for="rating-2"></label>
+                                    <input type="radio" name="review[rating]" value="1" id="rating-1">
+                                    <label for="rating-1"></label>
+                                </div>
+                                <div class="mb-3">
+                                    <textarea class="form-control" id="body" rows="3" name="review[body]"
+                                        placeholder="מה חשבת על המקום? יש לך טיפ למטיילים הבאים?" required></textarea>
+                                </div>
+                                <% if(loggedUser){ %>
+                                    <button class="btn btn-success">הגש</button>
+                                    <% }else{ %>
+                                        <button class="btn btn-success" disabled>הגש</button>
+                                        <small>בשביל להשאיר ביקורת אתה צריך <a href="/login">להתחבר</a></small>
+                                        <% } %>
+                            </form>
+                        </div>
+
+                        <div class="reviews m-3">
+                            <% for(review of campsite.reviews){ %>
+                                <div class="card mb-2">
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item card d-flex flex-row">
+                                            <div class="fixetRating" data-rating="<%= review.rating %>">
+                                                <span class="fixedStar"></span>
+                                                <span class="fixedStar"></span>
+                                                <span class="fixedStar"></span>
+                                                <span class="fixedStar"></span>
+                                                <span class="fixedStar"></span>
+                                            </div>
+                                            <% if(loggedUser && review.author.equals(loggedUser._id)){ %>
+                                                <form class="ms-auto" method="post"
+                                                    action="/campsites/<%= campsite._id %>/reviews/<%= review._id %>?_method=DELETE">
+                                                    <button class="border border-0 bg-transparent">
+                                                        <svg width="16" height="16" fill="currentColor"
+                                                            viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
+                                                            <path
+                                                                d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
+                                                        </svg>
+                                                    </button>
+                                                </form>
+                                                <% }else{ %>
+                                                    <small class="m-0 ms-auto text-muted">
+                                                        <%= review.author.username %>
+                                                    </small>
+                                                    <% } %>
+                                        </li>
+                                        <li class="list-group-item card">
+                                            <%= review.body %>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <% } %>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <script src="/javascript/show.js"></script>
+            <script src="/javascript/photoUpload.js"></script>
+
+            <script>
+                const mapToken = '<%-process.env.MAPBOX_TOKEN%>';
+                const campsite = JSON.parse(`<%- JSON.stringify(campsite).replace(/"/g, '\\"') %>`);
+            </script>
+
+            <script src="/javascript/showPageMap.js"></script>

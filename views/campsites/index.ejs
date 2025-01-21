@@ -1,0 +1,81 @@
+<% layout('/layouts/boilerplate') %>
+    <link rel="stylesheet" href="/css/indexPage.css">
+
+
+    <div id="map"></div>
+
+    <div class="container">
+        <h1 class="pageTitle">רשימת חניוני לילה</h1>
+
+        <div class="d-flex flex-row mb-4">
+
+            <input id="searchBox" class="form-control me-2" type="text" placeholder="חפש">
+
+            <div class="features-select dropdown me-2">
+                <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    מאפיינים
+                </button>
+
+                <ul class="dropdown-menu">
+
+                    <% for(let feature of campsites[0].featuresList){ %>
+                        <li>
+                            <label class="dropdown-item">
+                                <input type="checkbox" value="<%= feature %>" checked>
+                                <%= feature %>
+                            </label>
+                        </li>
+                        <% } %>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li>
+                                <button class="btn btn-link dropdown-item" onclick="featuresDropdown.selectAll()">בחר
+                                    הכל</button>
+                            </li>
+                </ul>
+            </div>
+
+            <div class="location-select dropdown">
+                <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    מיקום
+                </button>
+                <ul class="dropdown-menu">
+                    <% for(let region of regions){ %>
+                        <li>
+                            <label class="dropdown-item">
+                                <input type="checkbox" value="<%= region %>">
+                                <%= region %>
+                            </label>
+                        </li>
+                        <% } %>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li>
+                                <button class="btn btn-link dropdown-item" onclick="regionDropdown.selectAll()">בחר
+                                    הכל</button>
+                            </li>
+                </ul>
+
+            </div>
+
+        </div>
+
+        <section id="camps-container">
+        </section>
+
+
+
+
+    </div>
+    <div class="text-center" id="loading">טוען...</div>
+
+
+    <script>
+        const mapToken = '<%-process.env.MAPBOX_TOKEN%>';
+        const campsites = { features: JSON.parse('<%-JSON.stringify(campsites)%>') };
+    </script>
+    <script src="/javascript/clusterMap.js"></script>
+    <script src="/javascript/indexPage.js"></script>

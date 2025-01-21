@@ -1,0 +1,110 @@
+<% layout('/layouts/boilerplate') %>
+    <link rel="stylesheet" href="/css/multiSelect.css">
+    <link rel="stylesheet" href="/css/newEditForms.css">
+
+    <div class="container">
+        <div class="row w-100 my-5">
+            <div class="col-xl-8 offset-xl-2">
+                <div class="card p-3">
+                    <div class="formTitle d-flex flex-row">
+                        <a class="svgBack" href="/campsites/<%= campsite._id %>"></a>
+                        <h1 class="card-title text-center w-100">
+                            <%= campsite.title %>
+                        </h1>
+                    </div>
+                    <form id="CampForm" class="needs-validation" novalidate method="post"
+                        action="/campsites/<%= campsite._id %>?_method=PUT">
+
+                        <div class="row">
+                            <div class="col-md-6 ">
+                                <div class="mb-3">
+                                    <label class="form-label" for="title">שם:</label>
+                                    <input required class="form-control" type="text" id="title" name="campsite[title]"
+                                        value="<%=campsite.title %>">
+                                </div>
+                                <div class=" mb-3">
+                                    <label class="form-label" for="description">תיאור:</label>
+                                    <textarea required class="form-control" name="campsite[description]"
+                                        id="description"><%= campsite.description %></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="position-relative" style="max-width: 500px; margin: 0 auto;">
+                                        <div class="multi-select-container" id="multiSelectContainer">
+                                            <div class="input-wrapper">
+                                                <input type="text" class="multi-select-input form-control m-0 p-0"
+                                                    id="multiSelectInput" name="campsite[features]"
+                                                    placeholder="בחר אפשרויות נוספות..."
+                                                    value="<%= campsite.features %>">
+                                            </div>
+                                        </div>
+                                        <div class="dropdown-menu" id="dropdownMenu"></div>
+                                    </div>
+                                </div>
+                                <div class="mb-3 d-flex flex-column justify-content-center align-items-center">
+                                    <% if(campsite.imgs && campsite.imgs.length){ %>
+                                        <button class="btn btn-warning w-75" type="button" data-bs-toggle="collapse"
+                                            data-bs-target="#deleteImgsCont" aria-expanded="false"
+                                            aria-controls="collapseExample">
+                                            רוצה למחוק תמונות?
+                                        </button>
+                                        <% } %>
+                                            <div class="collapse w-100" id="deleteImgsCont">
+                                                <div class="card card-body">
+                                                    <% for(let img of campsite.imgs){ %>
+                                                        <div class="imgBoxCon">
+                                                            <div class="imgBox">
+                                                                <img src="<%= img.thumb %>" alt="">
+                                                            </div>
+                                                            <label for="img-<%= img.filename %>">מחק</label>
+                                                            <input id="img-<%= img.filename %>" type="checkbox"
+                                                                name="deleteImages[]" value="<%= img.filename %>">
+
+                                                        </div>
+                                                        <% } %>
+                                                </div>
+
+                                            </div>
+
+                                </div>
+                                <div>
+                                    <input required type="text" id="coordinates" name="campsite[geometry][coordinates]">
+                                    <input required type="text" id="region" name="campsite[region]">
+                                    <div class="invalid-feedback">
+                                        בבקשה תבחר מיקום במפה בשטח ישראל
+                                    </div>
+                                    <input type="text" id="type" value="point" name="campsite[geometry][type]">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 d-flex flex-column justify-content-center align-items-center">
+                                <div class="shadow" id="map"></div>
+                                <p id="address" class="text-secondary m-0"></p>
+                            </div>
+
+                        </div>
+                        <button class="btn btn-info text-white w-100 rounded-pill mt-2">עדכן</button>
+                    </form>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <script>
+        const mapToken = '<%-process.env.MAPBOX_TOKEN%>';
+        const campsite = JSON.parse('<%-JSON.stringify(campsite)%>');
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@turf/turf@7/turf.min.js"></script>
+    <link rel="stylesheet"
+        href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.css"
+        type="text/css">
+    <script
+        src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.min.js"></script>
+    <script src="/javascript/locationPickerMap.js"></script>
+
+
+    <script src="/javascript/multiSelect.js"></script>

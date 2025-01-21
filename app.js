@@ -9,6 +9,7 @@ const app = express();
 const path = require('path');
 const methodOverride = require('method-override');
 const ejsMate = require('ejs-mate');
+const favicon = require('serve-favicon');
 app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'))
@@ -17,6 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, '/public')));
+app.use(favicon(path.join(__dirname, 'public/assets', 'favicon.ico')));
 
 //security shit
 const mongoSanitize = require('express-mongo-sanitize');

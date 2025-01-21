@@ -65,7 +65,7 @@ app.use(
 
 //configure mongo
 // const dbUrl = process.env.DB_URL
-const dbUrl = 'mongodb://127.0.0.1:27017/CampsiteIL'
+const dbUrl = process.env.DB_URL || 'mongodb://127.0.0.1:27017/CampsiteIL'
 const mongoose = require('mongoose');
 main().catch(err => console.log(err));
 async function main() {
@@ -80,10 +80,10 @@ async function main() {
 //session, cookies and flash
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
-
+const secret = process.env.SECRET || "useBetterSecret"
 const sessionConfig = {
     name: "session",
-    secret: process.env.SESSION_SECRET || "useBetterSecret",
+    secret,
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({

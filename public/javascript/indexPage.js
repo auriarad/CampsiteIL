@@ -172,7 +172,6 @@ function createCampCard(camp) {
         </span>`
     ) : '';
 
-    console.log(features.toString().replaceAll(',', ''))
     return `
         <div class="card mb-2 mb-3">
             <div class="row">

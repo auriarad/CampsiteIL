@@ -79,7 +79,7 @@ async function main() {
 //session, cookies and flash
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
-const secret = process.env.SECRET || "useBetterSecret"
+const secret = process.env.SECRET
 const sessionConfig = {
     name: "session",
     secret,

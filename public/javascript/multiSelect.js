@@ -96,7 +96,6 @@ class MultiSelect {
         // Add event listeners to the rendered items
         this.elements.dropdown.querySelectorAll('.dropdown-item').forEach((item) => {
             item.addEventListener('mouseover', () => {
-                console.log()
                 if (this.highlighted !== parseInt(item.getAttribute('data-index'), 10)) {
                     this.highlighted = parseInt(item.getAttribute('data-index'), 10);
                     this.renderDropdown()

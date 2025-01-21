@@ -12,6 +12,7 @@ const ejsMate = require('ejs-mate');
 app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'))
+app.set("trust proxy", 1);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(methodOverride('_method'));
@@ -80,6 +81,7 @@ async function main() {
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const secret = process.env.SECRET
+
 const sessionConfig = {
     name: "session",
     secret,

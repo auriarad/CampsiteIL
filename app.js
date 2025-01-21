@@ -65,7 +65,7 @@ app.use(
 
 //configure mongo
 // const dbUrl = process.env.DB_URL
-const dbUrl = process.env.DB_URL || 'mongodb://127.0.0.1:27017/CampsiteIL'
+const dbUrl = 'mongodb://127.0.0.1:27017/CampsiteIL'
 const mongoose = require('mongoose');
 main().catch(err => console.log(err));
 async function main() {
